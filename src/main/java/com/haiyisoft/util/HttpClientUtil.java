@@ -244,4 +244,60 @@ public class HttpClientUtil {
         return resultString;
     }
 
+
+    /**
+     * 海颐知识库接口调用
+     *
+     * @param url
+     * @param json
+     * @return
+     */
+    public static String doPostJsonForHaiyi(String url, String json) {
+        // 创建Httpclient对象
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        String resultString = "";
+        try {
+            // 创建Http Post请求
+            HttpPost httpPost = new HttpPost(url);
+            //setConnectTimeout：设置连接超时时间，单位毫秒。
+            //setConnectionRequestTimeout：设置从connect Manager获取Connection 超时时间，单位毫秒。
+            //这个属性是新加的属性，因为目前版本是可以共享连接池的。
+            //setSocketTimeout：请求获取数据的超时时间，单位毫秒。
+            //如果访问一个接口，多少时间内无法返回数据，就直接放弃此次调用。
+            RequestConfig defaultRequestConfig = RequestConfig.custom()
+                    .setConnectTimeout(1000) //连接超时时间
+                    .setConnectionRequestTimeout(1000) //从线程池中获取线程超时时间
+                    .setSocketTimeout(3000) //设置数据超时时间
+
+                    .setStaleConnectionCheckEnabled(true)//提交请求前检查连接是否可用
+                    .build();
+            httpPost.setConfig(defaultRequestConfig);
+            // 创建请求内容
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+            httpPost.setEntity(entity);
+            //设置广西ivr-bot id
+//            httpPost.setHeader("Authorization", IVRInit.CHRYL_CONFIG_PROPERTY.getNgdBotToken());
+            //设置海颐知识库token
+            httpPost.setHeader("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib3RJZCI6IjhjNDdmMDYwLTA0ZWQtNDMifQ.dpfGF947B-hNZ_nsoM35vbznXgJszq0kwiX7kjWGuMg");
+
+            // 执行http请求
+            response = httpClient.execute(httpPost);
+            resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("你的代码报错啦: method: doPostJsonForGxNgd , exception: {} ", e);
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultString;
+    }
+
 }
