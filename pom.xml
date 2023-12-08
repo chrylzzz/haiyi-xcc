@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>haiyi-xcc</name>
-    <description>XCC</description>
+    <description>hy-XCC</description>
     <properties>
         <!-- maven打包时跳过测试 -->
         <skipTests>true</skipTests>
