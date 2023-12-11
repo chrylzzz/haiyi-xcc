@@ -2,7 +2,8 @@ package com.haiyisoft.handler;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.haiyisoft.util.HYUNITUtil;
+import com.haiyisoft.entry.HyUnitEvent;
+import com.haiyisoft.util.HyUnitUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,25 +12,32 @@ import lombok.extern.slf4j.Slf4j;
  * Created By Chryl on 2023-12-07.
  */
 @Slf4j
-public class HYUNITHandler {
+public class HyUnitHandler {
 
     /**
      * @param question
      * @param sessionId
      * @param phone
      */
-    public static void handler(String question, String sessionId, String phone) {
-        JSONObject result = HYUNITUtil.coreQuery(question, sessionId, phone);
+    public static HyUnitEvent handler(String question, String sessionId, String phone, HyUnitEvent reqHyUnitEvent) {
+        JSONObject result = HyUnitUtil.coreQuery(question, sessionId, phone);
         JSONArray resultJSONArray = result.getJSONArray("answers");
+        HyUnitEvent resHyUnitEvent = new HyUnitEvent();
         if (resultJSONArray == null || resultJSONArray.isEmpty()) {
 
         } else {
             JSONObject answerJson = resultJSONArray.getJSONObject(0);
             String answer = answerJson.getString("answer");
-            boolean contains = answer.contains("flow:");
-//        if (contains) {//流程
-            String convertAnswer = HYUNITUtil.convertAnswer(answerJson);
+//            boolean contains = answer.contains("flow:");
+//        if (contains) //流程
+            String convertAnswer = HyUnitUtil.convertAnswer(answerJson);
+            resHyUnitEvent.setAnswer(convertAnswer);
+            //处理指令和话术,处理成retKey/retValue
+            HyUnitUtil.convertText(resHyUnitEvent);
+            log.info("handler resHyUnitEvent :{}", resHyUnitEvent);
+//            return resNgdEvent;
         }
+        return resHyUnitEvent;
 
 
 
