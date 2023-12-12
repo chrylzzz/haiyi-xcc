@@ -42,11 +42,11 @@ public class HyUnitUtil {
     public static JSONObject coreQueryStruct(String question, String sessionId, String phone) {
         JSONObject param = new JSONObject();
         JSONObject context = new JSONObject();
-        context.put(XCCConstants.IVR_PHONE, phone);
+//        context.put(XCCConstants.IVR_PHONE, phone);
 
         param.put("question", question);//客户问题
         param.put("sessionId", sessionId);//会话id
-        param.put("phone", context);
+        param.put("phone", phone);
         log.info("coreQueryStruct param : {}", param);
         return param;
     }

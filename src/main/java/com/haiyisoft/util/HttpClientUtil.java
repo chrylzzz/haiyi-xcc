@@ -279,7 +279,7 @@ public class HttpClientUtil {
             //设置广西ivr-bot id
 //            httpPost.setHeader("Authorization", IVRInit.CHRYL_CONFIG_PROPERTY.getNgdBotToken());
             //设置海颐知识库token
-            httpPost.setHeader("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib3RJZCI6IjhjNDdmMDYwLTA0ZWQtNDMifQ.dpfGF947B-hNZ_nsoM35vbznXgJszq0kwiX7kjWGuMg");
+            httpPost.setHeader("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib3RJZCI6IjVjZTZjYjgxLTcwOTgtNGEifQ.m7KC2sR5CVOJNEAzEXqrNJkWzBvZt9TK3-7abjYLaAg");
 
             // 执行http请求
             response = httpClient.execute(httpPost);

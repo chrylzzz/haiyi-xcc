@@ -4,13 +4,12 @@ import com.haiyisoft.chryl.client.XCCConnection;
 import com.haiyisoft.chryl.ivr.DispatcherIVR;
 import com.haiyisoft.constant.XCCConstants;
 import com.haiyisoft.entry.ChannelEvent;
+import com.haiyisoft.entry.HyUnitEvent;
 import com.haiyisoft.entry.IVREvent;
-import com.haiyisoft.entry.NGDEvent;
 import com.haiyisoft.entry.XCCEvent;
+import com.haiyisoft.handler.HyUnitHandler;
 import com.haiyisoft.handler.IVRHandler;
-import com.haiyisoft.handler.NGDHandler;
 import com.haiyisoft.handler.XCCHandler;
-import com.haiyisoft.model.NGDNodeMetaData;
 import com.haiyisoft.service.IVRService;
 import io.nats.client.Connection;
 import lombok.extern.slf4j.Slf4j;
@@ -19,15 +18,14 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
- * V9版本:
- * 基于V6,转人工前保存会话信息
- * 欢迎语在IVR
+ * V11版本:配套海颐知识库
+ * 欢迎语在海颐知识库
  *
  * @author Chr.yl
  */
 @Slf4j
 @Component
-public class IVRServiceV9 implements IVRService {
+public class IVRServiceV11 implements IVRService {
     @Autowired
     private XCCConnection xccConnection;
     @Autowired
@@ -43,31 +41,26 @@ public class IVRServiceV9 implements IVRService {
             //event
             IVREvent ivrEvent = IVRHandler.convertIVREvent(channelEvent);
             XCCEvent xccEvent = new XCCEvent();
-            NGDEvent ngdEvent = new NGDEvent();
+            HyUnitEvent hyUnitEvent = new HyUnitEvent();
             //fs caller id
             String channelId = ivrEvent.getChannelId();
             //华为 caller id
             String icdCallerId = ivrEvent.getIcdCallerId();
             //来电号码
             String callerIdNumber = ivrEvent.getCidPhoneNumber();
-            //后缀码
-            String phoneAdsCode = ivrEvent.getPhoneAdsCode();
             log.info("start this call channelId: {} , icdCallerId: {} , state:{} , IVREvent: {}", channelId, icdCallerId, state, ivrEvent);
 
             if (XCCConstants.CHANNEL_START.equals(state)) {
                 //开始接管,第一个指令必须是Accept或Answer
                 xccConnection.answer(nc, channelEvent);
-                //
-                String retKey = XCCConstants.YYSR;
-                //使用营销欢迎语
-//                String retValue = PMSHandler.welcomeText();
-                String retValue = XCCConstants.WELCOME_TEXT;
-                //欢迎语在fs时候,该临时变量赋值->保存会话记录时使用
-                XCCConstants.TEMP_WELCOME_TEXT = retValue;
 
                 while (true) {
 
-                    xccEvent = dispatcherIvr.doDispatch(nc, channelEvent, retKey, retValue, ivrEvent, ngdEvent, callerIdNumber);
+                    //xcc识别数据
+                    String xccRecognitionResult = xccEvent.getXccRecognitionResult();
+
+                    //获取指令和话术
+                    hyUnitEvent = HyUnitHandler.handler(xccRecognitionResult, channelId, callerIdNumber, hyUnitEvent);
 
                     //处理是否已挂机
                     boolean handleHangup = XCCHandler.handleSomeHangup(xccEvent, channelId, nc, channelEvent);
@@ -77,37 +70,10 @@ public class IVRServiceV9 implements IVRService {
                         break;
                     }
 
-                    //xcc识别数据
-                    String xccRecognitionResult = xccEvent.getXccRecognitionResult();
+                    String  retKey = hyUnitEvent.getRetKey();
+                    String  retValue = hyUnitEvent.getRetValue();
 
-                    //获取指令和话术
-                    ngdEvent = NGDHandler.handler(xccRecognitionResult, channelId, callerIdNumber, icdCallerId, phoneAdsCode, ngdEvent);
-
-                    //记录IVR日志
-                    NGDNodeMetaData ngdNodeMetaData = ngdEvent.getNgdNodeMetaData();
-                    ivrEvent.getNgdNodeMetadataArray().add(ngdNodeMetaData);
-
-                    //handle ngd agent
-                    boolean handleSolved = NGDHandler.handleSolved(ngdEvent);
-                    //判断是否为机器回复
-                    if (handleSolved) {
-                        log.info("人为回复");
-                        ivrEvent = IVRHandler.transferRuleClean(ivrEvent);
-                    } else {
-                        log.info("机器回复");
-                        //触发转人工规则
-                        ivrEvent = IVRHandler.transferRule(ivrEvent, channelEvent, nc, ngdEvent, callerIdNumber, ngdNodeMetaData);
-                        if (ivrEvent.isTransferFlag()) {
-                            log.info("this call transferRule ,ivrEvent: {}", ivrEvent);
-                            //触发转人工时直接保存对话记录,故这里不再处理会话
-//                            ivrEvent = IVRHandler.convertTransferRuleNgdNodeMetadata(ivrEvent, ngdNodeMetaData);
-                            //转人工后挂机
-                            break;
-                        }
-                    }
-
-                    retKey = ngdEvent.getRetKey();
-                    retValue = ngdEvent.getRetValue();
+                    xccEvent = dispatcherIvr.doDispatch(nc, channelEvent, retKey, retValue, ivrEvent, hyUnitEvent, callerIdNumber);
 
                     log.info("revert ivrEvent data: {}", ivrEvent);
                 }
@@ -130,7 +96,7 @@ public class IVRServiceV9 implements IVRService {
             xccConnection.hangup(nc, channelEvent);
             log.info("hangup this call channelId: {} ,icdCallerId: {}", channelId, icdCallerId);
 
-            log.info("this call completed: {} , {}", ivrEvent, ngdEvent);
+            log.info("this call completed: {} , {}", ivrEvent, hyUnitEvent);
 //            IVRHandler.afterHangupNotTransfer(ivrEvent, ngdEvent);
 
         }

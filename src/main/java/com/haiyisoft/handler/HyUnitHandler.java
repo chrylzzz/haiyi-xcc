@@ -24,7 +24,7 @@ public class HyUnitHandler {
         JSONArray resultJSONArray = result.getJSONArray("answers");
         HyUnitEvent resHyUnitEvent = new HyUnitEvent();
         if (resultJSONArray == null || resultJSONArray.isEmpty()) {
-
+            log.info("返回数据为空");
         } else {
             JSONObject answerJson = resultJSONArray.getJSONObject(0);
             String answer = answerJson.getString("answer");
@@ -38,7 +38,6 @@ public class HyUnitHandler {
 //            return resNgdEvent;
         }
         return resHyUnitEvent;
-
 
 
 /*

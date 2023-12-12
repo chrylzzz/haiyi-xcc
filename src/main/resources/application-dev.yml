@@ -8,6 +8,7 @@ chryl:
   ######################################################################## XCC
   #  XSwitch config
   nats-url: nats://hy:h8klu6bRwW@nats.xswitch.cn:4222
+#  nats-url: nats://172.20.200.7:4222
 
   xctrl-subject: cn.xswitch.ctrl
   #  xctrl-subject: cn.xswitch.ctrl.>
@@ -39,7 +40,7 @@ chryl:
   #配置多节点
   nats-list:
     - node: 127.0.0.1
-      nats: nats://hy:h8klu6bRwW@nats.xswitch.cn:4222
+      nats: nats://172.20.200.7:4222
     - node: 10.194.31.203
       nats: nats://10.194.31.203:4222
   ######################################################################## XCC
