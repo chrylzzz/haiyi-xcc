@@ -41,7 +41,7 @@ public class HyUnitUtil {
      */
     public static JSONObject coreQueryStruct(String question, String sessionId, String phone) {
         JSONObject param = new JSONObject();
-        JSONObject context = new JSONObject();
+//        JSONObject context = new JSONObject();
 //        context.put(XCCConstants.IVR_PHONE, phone);
 
         param.put("question", question);//客户问题
