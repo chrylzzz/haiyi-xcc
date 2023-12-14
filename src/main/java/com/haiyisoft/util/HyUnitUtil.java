@@ -24,7 +24,8 @@ public class HyUnitUtil {
         JSONObject param = coreQueryStruct(queryText, sessionId, phone);
         log.info("开始调用,海颐知识库接口入参:{}", JSON.toJSONString(param, JSONWriter.Feature.PrettyFormat));
         //invoke
-        String jsonStrResult = HttpClientUtil.doPostJsonForHaiyi(IVRInit.CHRYL_CONFIG_PROPERTY.getNgdCoreQueryUrl(), param.toJSONString());
+//        String jsonStrResult = HttpClientUtil.doPostJsonForHaiyi(IVRInit.CHRYL_CONFIG_PROPERTY.getNgdCoreQueryUrl(), param.toJSONString());
+        String jsonStrResult = HttpClientUtil.doPostJsonForHaiyi("http://172.20.200.3:8090/bot-service/open/query", param.toJSONString());
         //res
         JSONObject parse = JSON.parseObject(jsonStrResult);
         log.info("结束调用,海颐知识库接口返回: {}", parse);
@@ -46,7 +47,7 @@ public class HyUnitUtil {
 
         param.put("question", question);//客户问题
         param.put("sessionId", sessionId);//会话id
-        param.put("phone", phone);
+        param.put("phone", "15569695896");
         log.info("coreQueryStruct param : {}", param);
         return param;
     }
