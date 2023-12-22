@@ -8,7 +8,8 @@ chryl:
   ######################################################################## XCC
   #  XSwitch config
 #  nats-url: nats://hy:h8klu6bRwW@nats.xswitch.cn:4222
-  nats-url: nats://172.20.200.7:4222
+#  nats-url: nats://172.20.200.7:4222
+  nats-url: nats://172.19.132.60:4222
 
   xctrl-subject: cn.xswitch.ctrl
   #  xctrl-subject: cn.xswitch.ctrl.>
@@ -60,7 +61,8 @@ chryl:
   #  tts engine: ali/xunfei/
   tts-engine: ali
   #  Voice-Name: default
-  tts-voice: shanshan
+#  tts-voice: shanshan
+  tts-voice: default
   # 是否开启多tts voice规则, true 开启
   tts-voice-rule: false
   # voice list
