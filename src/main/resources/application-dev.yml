@@ -26,15 +26,15 @@ chryl:
   # DTMF 输入超时(多位按键输入)
   dtmf-no-input-timeout: 15
   # DTMF 输入超时(少位按键输入)
-  dtmf-chryl-no-input-timeout: 5
+  dtmf-chryl-no-input-timeout: 10
   # DTMF 位间超时(秒)
-  digit-timeout: 5
+  digit-timeout: 8
   # speech 未检测到语音超时(秒)
   speech-no-input-timeout: 10
   # 语音超时，即如果对方讲话一直不停超时，最大只能设置成6000ms，默认为6000ms。
-  speech-timeout: 6
+  speech-timeout: 10
   # 语音最大超时，和参数speech_timeout作用相同，如果max_speech_timeout的值大于speech_timeout，则以max_speech_timeout为主，用于一些特殊场景的语音时长设置。
-  max-speech-timeout: 8
+  max-speech-timeout: 10
   #
   # 若有多台XSwitch,再开启, true 开启
   cluster: false
@@ -63,6 +63,7 @@ chryl:
   #  Voice-Name: default
 #  tts-voice: shanshan
   tts-voice: default
+#  tts-voice: x3_xiaoyue
   # 是否开启多tts voice规则, true 开启
   tts-voice-rule: false
   # voice list
