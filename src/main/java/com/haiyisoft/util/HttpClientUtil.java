@@ -266,8 +266,8 @@ public class HttpClientUtil {
             //setSocketTimeout：请求获取数据的超时时间，单位毫秒。
             //如果访问一个接口，多少时间内无法返回数据，就直接放弃此次调用。
             RequestConfig defaultRequestConfig = RequestConfig.custom()
-                    .setConnectTimeout(1000) //连接超时时间
-                    .setConnectionRequestTimeout(1000) //从线程池中获取线程超时时间
+                    .setConnectTimeout(2000) //连接超时时间
+                    .setConnectionRequestTimeout(2000) //从线程池中获取线程超时时间
                     .setSocketTimeout(3000) //设置数据超时时间
 
                     .setStaleConnectionCheckEnabled(true)//提交请求前检查连接是否可用
