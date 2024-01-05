@@ -8,8 +8,8 @@ chryl:
 ######################################################################## XCC
   #  XSwitch config
 #  nats-url: nats://hy:h8klu6bRwW@nats.xswitch.cn:4222
-#  nats-url: nats://172.20.200.7:4222
-  nats-url: nats://172.19.132.60:4222
+  nats-url: nats://172.20.200.7:4222
+#  nats-url: nats://172.19.132.60:4222
 
   xctrl-subject: cn.xswitch.ctrl
   #  xctrl-subject: cn.xswitch.ctrl.>
@@ -61,6 +61,7 @@ chryl:
   #  tts engine: ali/xunfei/
   tts-engine: ali
   #  Voice-Name: default
+#  tts-voice: taozi
 #  tts-voice: shanshan
   tts-voice: default
 #  tts-voice: x3_xiaoyue
@@ -86,6 +87,7 @@ chryl:
 # log path
 logback:
   path: /Users/chryl/logs/xcc/
+#  path: /home/app/chryl/logs/xcc
 ######################################################################## LOG
 ####################################################################################################
 ############################################# ChrylConfigProperty 相关变量配置 ######################
